@@ -1,0 +1,2 @@
+cnpm install webpack webpack-cli webpack-dev-server babel-core babel-loader babel-preset-env babel-preset-react react react-dom style-loader css-loader html-webpack-plugin  --save-dev
+cnpm install express mongoose body-parser cookie-parser socket.io nodemon socket.io-client axios  --save-dev
