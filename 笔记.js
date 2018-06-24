@@ -9,8 +9,10 @@
 	    inline: true,//实时刷新
         host: '0.0.0.0',  会导致自动打开 0.0.0.0的路径，原路径并没有失效，局域网也可以正常访问
 5：引入socket-io；
-	app.listen需要改成server.listen  实例化之后
+	 服务端socketio实例化之后 app.listen需要改成server.listen 
 	前台io监听的还是9093端口
+6：解决其他客户端不能访问的问题
+	const socket=io("ws://192.168.64.101:9093")   局域网没有一直报错了
 
 
 
