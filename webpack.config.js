@@ -16,7 +16,7 @@ module.exports = {
         host: '0.0.0.0',
         proxy: {
             '/data/*': {
-                target: 'http://127.0.0.1:9093',
+                target: 'http://localhost:9093',
                 //pathRewrite: {'^/data': ''},
                 secure: false, // 接受 运行在 https 上的服务
                 changeOrigin: true

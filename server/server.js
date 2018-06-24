@@ -5,14 +5,17 @@ const path=require('path')
 const app=express()
 const server=require("http").createServer(app)
 const io=require('socket.io')(server)  
-
+let socket0;
 io.on("connection",function(socket){
 	console.log('全局监听事件')
-	socket.on("/test",function(data){
-		console.log(data,10)
-		//io.emit("recvmg",data)
-	})
+	socket0=socket;
+	// socket.on("/test",function(data){
+	// 	console.log(data,10,"初始化广播测试")
+	// 	//io.emit("recvmg",data)
+	// })
+	//io.emit("/phone2",{a:100})
 })
+app.use(cookieParser())
 app.use(bodyParser.json())
 const mongoose =require("mongoose")
 const connect="mongodb://127.0.0.1:27017/my"
@@ -45,9 +48,9 @@ app.post('/data/sendmsg',function(req,res){
 		if(!err){
 			User.find({},function(e,d){//从数据库查询出数据并广播到前台
 				if(!e){
-					console.log('在远程这个事件也是触发了的')
+					io.emit("/phone",d)
+					console.log(d[0].user,"应该广播出去")
 					return res.json(d)
-					//io.emit("/phone",d) //就是这里没有广播到远程-但是广播到了 本地
 				}else{console.log(e)}//也就是说远程根本没接收到，为什么？
 			})
 		}else{
@@ -63,6 +66,15 @@ app.post('/data/sendmsg',function(req,res){
 	// 	}
 	// })
 })
+app.use(function(req,res,next){
+	if(req.url.startsWith('/user/')||req.url.startsWith('/static/')||req.url.startsWith('/data/')){
+		return next        //我们是没有user，没有statec路径的
+	}else{
+		console.log('path',path.resolve('../build/'))
+		return res.sendFile(path.resolve('../build/'))//修正路径的问题
+	}
+})
+app.use('/',express.static(path.resolve('../build')))
 server.listen(9093,(req,res)=>{
 	console.log("连接9093成功")
 })

@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import config from './config.json';
 import axios from 'axios'
 import io from 'socket.io-client'
-const socket=io("ws://192.168.64.101:9093")
+var socket=io("ws://192.168.64.101:9093")
+// const socket=io("ws://localhost:9093")
+//const socket=io("ws://127.0.0.1:9093")
 
 class Greeter extends Component{
 	constructor(props){
@@ -16,7 +18,21 @@ class Greeter extends Component{
 		this.changeMsg=this.changeMsg.bind(this)
 	}
 	componentDidMount(){
-		socket.emit('/test',{msg:"初始化时向后台发送连接测"})
+		const b=this
+		var a=function(data){
+			b.setState({
+				msg:data[data.length-1].user
+			})
+		}
+		socket.emit('/test',{msg:"初始化前台发送连接测试"})
+		socket.on("/phone",(data)=>{//这里接收后端广播的事件--这里远程没有接收到
+			console.log(data[data.length-1].user,"接收到后台广播",29)//这个data同样是，后端广播的事件
+			a(data)
+			// b.setState({
+			// 	msg:data[data.length-1].user
+			// })
+		})
+		
 	}
 	testChange(event){
 		let val=event.target.value
@@ -37,7 +53,11 @@ class Greeter extends Component{
 			console.log(res.data)
 			const v=res.data[res.data.length-1].user
 			t(v)
+			// socket.on("/data/phone1",(data)=>{
+			// 	console.log(data,21)
+			// })
 		})
+		
 	}
 	render() {
 	    return (
