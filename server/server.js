@@ -27,6 +27,33 @@ app.get('/data',function(req,res){//这里是自定义端口后面的路径
 		}
 	})
 })
+app.post('/data/sendmsg',function(req,res){
+	console.log(req.body)
+	User.create({                       //之后写入数据库
+		'user':req.body.msg, 
+		age:11  
+	},function(err,doc){
+		if(!err){
+			User.find({},function(e,d){//从数据库查询出数据并广播到前台
+				if(!e){
+					console.log('在远程这个事件也是触发了的')
+					return res.json(d)
+					//io.emit("/phone",d) //就是这里没有广播到远程-但是广播到了 本地
+				}else{console.log(e)}//也就是说远程根本没接收到，为什么？
+			})
+		}else{
+			// console.log(err)
+		}
+	})
+	// User.find({},function(err,doc){
+	// 	if(!err){
+	// 		//console.log("接收到后台数据")
+	// 		res.json(doc)
+	// 	}else{
+	// 		//console.log(err)
+	// 	}
+	// })
+})
 app.listen(9093,(req,res)=>{
 	console.log("连接9093成功")
 })
