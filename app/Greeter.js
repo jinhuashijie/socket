@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import config from './config.json';
 import axios from 'axios'
+import io from 'socket.io-client'
+const socket=io("ws://127.0.0.1:9093")
+
 class Greeter extends Component{
 	constructor(props){
 		super(props)
@@ -11,6 +14,9 @@ class Greeter extends Component{
 		this.testChange=this.testChange.bind(this)
 		this.sendMsg=this.sendMsg.bind(this)
 		this.changeMsg=this.changeMsg.bind(this)
+	}
+	componentDidMount(){
+		socket.emit('/test',{msg:"初始化时向后台发送连接测"})
 	}
 	testChange(event){
 		let val=event.target.value

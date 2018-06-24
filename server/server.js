@@ -3,7 +3,16 @@ const bodyParser=require("body-parser")
 const cookieParser=require("cookie-parser")
 const path=require('path')
 const app=express()
+const server=require("http").createServer(app)
+const io=require('socket.io')(server)  
 
+io.on("connection",function(socket){
+	console.log('全局监听事件')
+	socket.on("/test",function(data){
+		console.log(data,10)
+		//io.emit("recvmg",data)
+	})
+})
 app.use(bodyParser.json())
 const mongoose =require("mongoose")
 const connect="mongodb://127.0.0.1:27017/my"
@@ -54,7 +63,7 @@ app.post('/data/sendmsg',function(req,res){
 	// 	}
 	// })
 })
-app.listen(9093,(req,res)=>{
+server.listen(9093,(req,res)=>{
 	console.log("连接9093成功")
 })
 
